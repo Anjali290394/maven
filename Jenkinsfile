@@ -12,7 +12,7 @@ pipeline
         }
         stage('ContBuild')
         {
-            steps
+           steps
             {
                 sh 'mvn package'
             }
@@ -21,7 +21,7 @@ pipeline
         {
             steps
             {
-                sh 'scp /var/lib/jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.15.208:/var/lib/tomcat10/webapps/mytestapp.war'
+                sh 'scp /var/lib/jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.26.200:/var/lib/tomcat10/webapps/mytestapp.war'
             }
         }
         stage('ContTesting')
@@ -36,7 +36,7 @@ pipeline
         {
             steps
             {
-                sh 'scp /var/lib/jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.13.103:/var/lib/tomcat10/webapps/myprodapp.war'
+                sh 'scp /var/lib/jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.16.245:/var/lib/tomcat10/webapps/myprodapp.war'
             }
         }
         
