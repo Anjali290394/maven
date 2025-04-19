@@ -1,42 +1,59 @@
+@Library('mylibrary')_
+
 pipeline
 {
     agent any
     stages
     {
-        stage('ContDownload')
+        stage('Download_Master')
         {
             steps
             {
-                git 'https://github.com/IntelliqDevops/maven.git'
+                script
+                {
+                    cicd.gitDownload("maven")
+                }
             }
         }
-        stage('ContBuild')
+        stage('Build_Master')
         {
-           steps
+            steps
             {
-                sh 'mvn package'
+                script
+                {
+                    cicd.buildArtifact()
+                }
             }
         }
-        stage('ContDeployment')
+        stage('Deployment_Master')
         {
             steps
             {
-                sh 'scp /var/lib/jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.88.185:/var/lib/tomcat10/webapps/mytestapp.war'
-            }
-        } 
-	stage('ContTesting')
-        {
-            steps
-            {
-                git 'https://github.com/IntelliqDevops/FunctionalTesting.git'
-                sh 'java -jar /var/lib/jenkins/workspace/DeclarativePipeline1/testing.jar'
+                script
+                {
+                    cicd.deployTomcat("DeclarativePipelineWithSharedLibraries","172.31.80.106","testapp")
+                }
             }
         }
-        stage('ContDelivery')
+        stage('Testing_Master')
         {
             steps
             {
-                sh 'scp /var/lib/jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.93.161:/var/lib/tomcat10/webapps/myprodapp.war'
+                script
+                {
+                    cicd.gitDownload("FunctionalTesting")
+                    cicd.runSelenium("DeclarativePipelineWithSharedLibraries")
+                }
+            }
+        }
+        stage('Delivery_Master')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.deployTomcat("DeclarativePipelineWithSharedLibraries","172.31.92.221","prodapp")
+                }
             }
         }
         
